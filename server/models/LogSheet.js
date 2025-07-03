@@ -1,8 +1,11 @@
-// models/Logsheet.js
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const logsheetSchema = new mongoose.Schema({
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-  reviewedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }, // admin reviewer
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  reviewedBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User", // or "Admin", depending on your admin model
+  },
+
   data: {
     assetCode: String,
     assetDescription: String,
@@ -11,17 +14,17 @@ const logsheetSchema = new mongoose.Schema({
     workingDetails: {
       commenced: {
         time: String,
-        hmrOrKmrReading: String
+        hmrOrKmrReading: String,
       },
       completed: {
         time: String,
-        hmrOrKmrReading: String
-      }
+        hmrOrKmrReading: String,
+      },
     },
     productionDetails: {
       activityCode: String,
       quantityProduced: Number,
-      workDone: String
+      workDone: String,
     },
     totals: {
       workingHours: Number,
@@ -29,15 +32,19 @@ const logsheetSchema = new mongoose.Schema({
       breakdownHours: Number,
       productionQty: Number,
       hmrOrKmrRun: String,
-      fuelInLiters: Number
+      fuelInLiters: Number,
     },
     userInfo: {
       userName: String,
-      userSignature: String
-    }
+      userSignature: String,
+    },
   },
-  status: { type: String, enum: ['Pending', 'Accepted', 'Rejected'], default: 'Pending' },
+  status: {
+    type: String,
+    enum: ["Pending", "Accepted", "Rejected"],
+    default: "Pending",
+  },
   rejectionReason: String,
-  submittedAt: { type: Date, default: Date.now }
+  submittedAt: { type: Date, default: Date.now },
 });
-module.exports = mongoose.model('Logsheet', logsheetSchema);
+module.exports = mongoose.model("Logsheet", logsheetSchema);
