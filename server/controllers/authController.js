@@ -21,10 +21,24 @@ exports.registerUsers = async (req, res) => {
         password: hashedPassword,
         isAdmin: !!user.isAdmin,
       });
+
+      const emailBody = `
+        Welcome to the Logsheet Management System!
+
+        Your login credentials are as follows:
+        UserID: ${user.email}
+        Password: ${password}
+
+        You can access the portal here:
+        https://v0-logsheet-management-system-desig.vercel.app
+
+        Please log in and change your password as soon as possible.
+      `;
+
       await sendEmail(
         user.email,
         "Your Logsheet Portal Credentials",
-        `UserID: ${user.email}\nPassword: ${password}`
+        emailBody
       );
     }
 
