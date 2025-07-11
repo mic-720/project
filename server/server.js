@@ -8,6 +8,7 @@ const port = process.env.PORT;
 const allowedOrigins = [
   "https://v0-logsheet-management-design.vercel.app",
   "https://v0-logsheet-management-system-desig.vercel.app",
+  "https://preview-logsheet-management-system-design-kzmo3uz2f41m0qji8v2d.vusercontent.net",
   // add more origins here if needed
 ];
 
