@@ -9,6 +9,8 @@ const allowedOrigins = [
   "https://v0-logsheet-management-design.vercel.app",
   "https://v0-logsheet-management-system-desig.vercel.app",
   "https://preview-logsheet-management-system-design-kzmo3uz2f41m0qji8v2d.vusercontent.net",
+  "https://v0-logsheet-management-system-desi-one.vercel.app",
+  "https://v0-logsheet-management-syste-rohit-choudharys-projects-1e246c86.vercel.app",
   // add more origins here if needed
 ];
 
