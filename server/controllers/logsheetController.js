@@ -53,3 +53,62 @@ exports.exportMyLogsheetsCSV = async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 };
+
+// Get all logsheets (admin use)
+exports.getAllLogsheets = async (req, res) => {
+  try {
+    const logsheets = await Logsheet.find().populate("userId"); // populate if you want user details too
+    res.status(200).json({ success: true, data: logsheets });
+  } catch (err) {
+    res
+      .status(500)
+      .json({
+        success: false,
+        message: "Failed to fetch logsheets",
+        error: err.message,
+      });
+  }
+};
+
+exports.exportAllLogsheetsCSVAdmin = async (req, res) => {
+  try {
+    const logsheets = await Logsheet.find().populate("userId");
+
+    const formatted = logsheets.map((entry) => {
+      const d = entry.data;
+      return {
+        userName: d.userInfo.userName,
+        email: entry.userId?.email || "",
+        date: d.date,
+        assetCode: d.assetCode,
+        assetDescription: d.assetDescription,
+        operatorName: d.operatorName,
+        activityCode: d.productionDetails.activityCode,
+        quantityProduced: d.productionDetails.quantityProduced,
+        workDone: d.productionDetails.workDone,
+        workingHours: d.totals.workingHours,
+        idleHours: d.totals.idleHours,
+        breakdownHours: d.totals.breakdownHours,
+        fuelInLiters: d.totals.fuelInLiters,
+        hmrOrKmrRun: d.totals.hmrOrKmrRun,
+        status: entry.status,
+        rejectionReason: entry.rejectionReason || "",
+      };
+    });
+
+    const parser = new Parser();
+    const csv = parser.parse(formatted);
+
+    res.header("Content-Type", "text/csv");
+    res.attachment("all_logsheets.csv");
+    return res.send(csv);
+  } catch (err) {
+    res
+      .status(500)
+      .json({
+        success: false,
+        message: "Failed to export CSV",
+        error: err.message,
+      });
+  }
+};
