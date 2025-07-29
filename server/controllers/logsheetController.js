@@ -4,14 +4,24 @@ const { Parser } = require("json2csv");
 
 exports.submitLogsheet = async (req, res) => {
   try {
+    const imageUrl = req.file ? req.file.path : null;
+
     const newLogsheet = new Logsheet({
       userId: req.user.userId,
-      data: req.body,
+      data: {
+        ...req.body,
+        imageUrl,
+      },
     });
+
+    console.log(newLogsheet);
+
     await newLogsheet.save();
-    res.status(201).json({ message: "Logsheet submitted" });
+    res.status(201).json({ message: "Logsheet submitted", imageUrl });
   } catch (err) {
-    console.error("Submit logsheet error:", err);
+    console.error("Submit logsheet error:", err.message);
+    console.error("Full error:", JSON.stringify(err, null, 2));
+
     res.status(500).json({ error: "Server error" });
   }
 };
@@ -54,19 +64,16 @@ exports.exportMyLogsheetsCSV = async (req, res) => {
   }
 };
 
-// Get all logsheets (admin use)
 exports.getAllLogsheets = async (req, res) => {
   try {
     const logsheets = await Logsheet.find().populate("userId"); // populate if you want user details too
     res.status(200).json({ success: true, data: logsheets });
   } catch (err) {
-    res
-      .status(500)
-      .json({
-        success: false,
-        message: "Failed to fetch logsheets",
-        error: err.message,
-      });
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch logsheets",
+      error: err.message,
+    });
   }
 };
 
@@ -103,12 +110,10 @@ exports.exportAllLogsheetsCSVAdmin = async (req, res) => {
     res.attachment("all_logsheets.csv");
     return res.send(csv);
   } catch (err) {
-    res
-      .status(500)
-      .json({
-        success: false,
-        message: "Failed to export CSV",
-        error: err.message,
-      });
+    res.status(500).json({
+      success: false,
+      message: "Failed to export CSV",
+      error: err.message,
+    });
   }
 };

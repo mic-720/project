@@ -38,6 +38,7 @@ const logsheetSchema = new mongoose.Schema({
       userName: String,
       userSignature: String,
     },
+    imageUrl: String,
   },
   status: {
     type: String,
